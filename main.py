@@ -91,6 +91,13 @@ class DielectricFiller:
     res = cellsMap + temp
 
     return res
+    # return [
+    #   [1, 1, 2, 2, 3, 2, 2, 1, 1],
+    #   [1, 1, 2, 2, 3, 2, 2, 1, 1],
+    #   [1, 1, 2, 2, 3, 2, 2, 1, 1],
+    #   [1, 1, 2, 2, 3, 2, 2, 1, 1],
+    #   [1, 1, 2, 2, 3, 2, 2, 1, 1]
+    # ]
 
   def createCell(self, branchesNumber, row, currCell, cellCount, cellSize):
     lineLength = cellSize
@@ -140,7 +147,7 @@ class DielectricFiller:
           self.move(res[i], lineLength - offset)
       else:
         if (i == len(res) - 1):
-          self.move(res[i], lineLength)
+          self.move(res[i], (lineLength - (cellSize * 1 / (branchesNumber + 2))) + cellSize * 1 / 8)
         elif (i > math.floor(len(res) / 2) - 1 and i < len(res) - 2):
           self.move(res[i], lineLength - offset)
           lineLength += offset
@@ -155,6 +162,8 @@ class DielectricFiller:
 
     cellsMap = self.createCellsMap(widthX, widthY)
 
+    print(cellsMap)
+
     for row in range(len(cellsMap)):
       for cell in range(len(cellsMap[row])):
         self.createCell(cellsMap[row][cell], row, cell, len(cellsMap[row]), cellSize)
@@ -162,7 +171,7 @@ class DielectricFiller:
       if (row % 2 == 0):
         self.move('up', cellSize + cellSize * 1 / 10)
       elif (row != len(cellsMap) - 1):
-        self.move('up', cellSize * 1 / 10)
+        self.move('up', cellSize * 1 / 8)
 
     print(self.getCurrentState())
 
