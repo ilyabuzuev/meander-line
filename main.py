@@ -15,6 +15,15 @@ class DielectricFiller:
     self.defaultCellSize = 5
     self.defaultWidthX = 11 
     self.defaultWidthY = 7
+    self.extruderSize = 0.4
+
+    self.radius = 65
+    self.height = 30
+
+    self.layerHeight = 0.2
+
+    self.e_0 = 2.4
+    self.e_centr = 2
 
     self.root = Tk()
 
@@ -42,6 +51,23 @@ class DielectricFiller:
 
   def getCurrentCoords(self):
     return self.x0, self.y0
+  
+  def calcLayersCount(self):
+    return self.height / self.layerHeight
+  
+  def calcCurrentZ(self, currentLayer):
+    return currentLayer * self.layerHeight
+  
+  def calcOccypancyRate(self, currentLayer):
+    z = round(self.calcCurrentZ(currentLayer), 1)
+
+    print(z)
+
+    e_necessary = self.e_centr / pow(math.cosh((math.pi * z) / (2 * self.radius)), 2)
+
+    occypancyRate = math.log(e_necessary) / math.log(self.e_0)
+
+    return occypancyRate
 
   def move(self, direction, value):
     x, y = self.getCurrentCoords()
@@ -233,4 +259,7 @@ class DielectricFiller:
     self.root.mainloop()
     
 meander = DielectricFiller()
-meander.setState('INIT')
+# meander.setState('INIT')
+
+for i in range(0, 200):
+  print(meander.calcOccypancyRate(i))
